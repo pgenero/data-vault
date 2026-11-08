@@ -1,26 +1,672 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   DATA VAULT: global theme, adapted from Arcade Vault (references/templates).
+
+   Same identity: near-black, cyan and magenta, pixel type, notched buttons.
+   Different job: people read data here, so the arcade rules are inverted.
+
+   1. Glow means focus. Only what is hovered, focused or selected may glow.
+   2. Nothing is drawn over data. No scanlines or noise on charts, and panels
+      are opaque so the page texture stays behind them.
+   3. Neon is for the interface, not for series. Chart colors are the validated
+      --series-* slots below, never --cyan, --magenta or --yellow.
+   4. Press Start 2P is for short text read once (logo, page title, KPI value).
+      Anything people must read closely uses JetBrains Mono.
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  /* surfaces */
+  --background: #0a0a0f;
+  --surface: #0f0f18; /* chart surface: the palettes are validated against it */
+  --surface-raised: #15151f;
+
+  /* ink. All three clear 4.5:1 on every surface. The template's #4a4f70 sat
+     at 2.4:1, too low for axis labels, so it now only draws --axis. */
+  --foreground: #e6e9ff;
+  --ink-dim: #a4a9cc;
+  --ink-faint: #8a8fb5;
+
+  /* interface neon: never for series or status */
+  --cyan: #00f5ff; /* interaction and focus */
+  --magenta: #ff006e; /* selection */
+  --yellow: #f5ff00; /* the one figure a page wants read first */
+
+  /* lines */
+  --line: rgba(0, 245, 255, 0.18);
+  --line-subtle: rgba(255, 255, 255, 0.06);
+  --gridline: #23243a;
+  --axis: #4a4f70;
+
+  /* Categorical: identity. Fixed order, assign in sequence, never cycle; a
+     ninth series folds into "Other". Dark band validated on --surface:
+     worst adjacent CVD 13.4, worst adjacent normal vision 22.9.
+     Scatter, bubble, map and small multiples: first three slots only. */
+  --series-1: #00a8af; /* cyan */
+  --series-2: #ca005e; /* magenta */
+  --series-3: #9130db; /* violet */
+  --series-4: #a89400; /* gold */
+  --series-5: #0083fd; /* blue */
+  --series-6: #009342; /* green */
+  --series-7: #cd1aa5; /* pink */
+  --series-8: #ca6800; /* orange */
+
+  /* Sequential: magnitude, dark (near zero) to bright. The low steps recede
+     into the surface on purpose. Discrete ordered marks start at --seq-300. */
+  --seq-100: #003538;
+  --seq-200: #004d50;
+  --seq-300: #006569;
+  --seq-400: #007e84;
+  --seq-500: #00999f;
+  --seq-600: #00b4bb;
+  --seq-700: #00d0d9;
+  --seq-800: #00edf7;
+
+  /* Diverging: polarity, with a neutral midpoint and equal arms */
+  --div-neg-3: #fe85a4;
+  --div-neg-2: #b94769;
+  --div-neg-1: #750033;
+  --div-mid: #2c2d3d;
+  --div-pos-1: #00474a;
+  --div-pos-2: #00858a;
+  --div-pos-3: #00c9d1;
+
+  /* Status: reserved meaning, always shown with an icon and a label */
+  --good: #00ff88;
+  --warning: #ffcf3a;
+  --serious: #ff8a3d;
+  --critical: #ff4d6d;
+
+  /* the only glows in the theme: see .dv-btn, .dv-chip and .dv-panel */
+  --glow-cyan: 0 0 14px rgba(0, 245, 255, 0.45);
+  --glow-magenta: 0 0 14px rgba(255, 0, 110, 0.45);
+
+  --notch: 8px;
 }
 
 @theme inline {
+  /* Only the three template faces exist, so `font-sans` is not a utility. */
+  --font-*: initial;
+  --font-pixel: var(--font-press-start), ui-monospace, monospace;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-note: var(--font-courier-prime), "Courier New", monospace;
+  --default-font-family: var(--font-mono);
+  --default-mono-font-family: var(--font-mono);
+
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--foreground);
+  --color-ink-dim: var(--ink-dim);
+  --color-ink-faint: var(--ink-faint);
+  --color-cyan: var(--cyan);
+  --color-magenta: var(--magenta);
+  --color-yellow: var(--yellow);
+  --color-line: var(--line);
+  --color-line-subtle: var(--line-subtle);
+  --color-gridline: var(--gridline);
+  --color-axis: var(--axis);
+
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-series-4: var(--series-4);
+  --color-series-5: var(--series-5);
+  --color-series-6: var(--series-6);
+  --color-series-7: var(--series-7);
+  --color-series-8: var(--series-8);
+
+  --color-seq-100: var(--seq-100);
+  --color-seq-200: var(--seq-200);
+  --color-seq-300: var(--seq-300);
+  --color-seq-400: var(--seq-400);
+  --color-seq-500: var(--seq-500);
+  --color-seq-600: var(--seq-600);
+  --color-seq-700: var(--seq-700);
+  --color-seq-800: var(--seq-800);
+
+  --color-div-neg-3: var(--div-neg-3);
+  --color-div-neg-2: var(--div-neg-2);
+  --color-div-neg-1: var(--div-neg-1);
+  --color-div-mid: var(--div-mid);
+  --color-div-pos-1: var(--div-pos-1);
+  --color-div-pos-2: var(--div-pos-2);
+  --color-div-pos-3: var(--div-pos-3);
+
+  --color-good: var(--good);
+  --color-warning: var(--warning);
+  --color-serious: var(--serious);
+  --color-critical: var(--critical);
+
+  --shadow-glow-cyan: var(--glow-cyan);
+  --shadow-glow-magenta: var(--glow-magenta);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* The arcade floor flattened into plot paper. Static, because motion behind
+     a chart competes with the data. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(255, 0, 110, 0.06), transparent 60%),
+      radial-gradient(120% 80% at 50% 100%, rgba(0, 245, 255, 0.07), transparent 60%),
+      linear-gradient(to right, var(--line-subtle) 1px, transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(to bottom, var(--line-subtle) 1px, transparent 1px) 0 0 / 40px 40px;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  ::selection {
+    background: var(--magenta);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* ----- type -----
+     Press Start 2P is drawn on an 8px grid, so its sizes are multiples of 8. */
+  .dv-title {
+    margin: 0;
+    font-family: var(--font-pixel);
+    font-size: 24px;
+    line-height: 1.35;
+    background: linear-gradient(180deg, #fff 0%, var(--cyan) 60%, var(--magenta) 110%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  @media (min-width: 768px) {
+    .dv-title {
+      font-size: 40px;
+    }
+  }
+
+  .dv-logo {
+    font-family: var(--font-pixel);
+    font-size: 16px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .dv-logo-mark {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    background:
+      linear-gradient(45deg, var(--magenta) 0 50%, transparent 50%),
+      linear-gradient(-45deg, var(--cyan) 0 50%, transparent 50%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .dv-heading {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--foreground);
+  }
+
+  .dv-subheading {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+
+  /* Annotations and data sources: the typewriter voice from the template. */
+  .dv-note {
+    font-family: var(--font-note);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--ink-faint);
+  }
+
+  /* ----- navigation ----- */
+  .dv-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 14px 32px;
+    background: var(--background);
+    border-bottom: 1px solid var(--line);
+  }
+  .dv-nav-links {
+    display: flex;
+    gap: 4px;
+    min-width: 0;
+    overflow-x: auto;
+  }
+  .dv-nav-links a {
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--ink-dim);
+    transition: color 120ms;
+  }
+  .dv-nav-links a:hover {
+    color: var(--foreground);
+  }
+  .dv-nav-links a[aria-current="page"] {
+    color: var(--cyan);
+    box-shadow: inset 0 -2px 0 var(--cyan);
+  }
+  @media (max-width: 840px) {
+    .dv-nav {
+      gap: 12px;
+      padding: 12px 16px;
+    }
+  }
+
+  /* ----- buttons -----
+     clip-path also cuts anything outside the box, so the focus ring is drawn
+     inside and the hover glow is inset. It cuts the border at the notches too,
+     so the two gradients redraw those edges as diagonals. */
+  .dv-btn {
+    --edge: var(--cyan);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--foreground);
+    background:
+      linear-gradient(135deg, transparent 50%, var(--edge) 50% calc(50% + 1.5px), transparent calc(50% + 1.5px))
+        top left / var(--notch) var(--notch) no-repeat border-box,
+      linear-gradient(315deg, transparent 50%, var(--edge) 50% calc(50% + 1.5px), transparent calc(50% + 1.5px))
+        bottom right / var(--notch) var(--notch) no-repeat border-box;
+    border: 1px solid var(--edge);
+    cursor: pointer;
+    clip-path: polygon(
+      var(--notch) 0,
+      100% 0,
+      100% calc(100% - var(--notch)),
+      calc(100% - var(--notch)) 100%,
+      0 100%,
+      0 var(--notch)
+    );
+    transition: color 120ms, box-shadow 120ms;
+  }
+  .dv-btn:hover {
+    color: var(--cyan);
+    box-shadow: inset 0 0 10px rgba(0, 245, 255, 0.35);
+  }
+  .dv-btn:active {
+    transform: translateY(1px);
+  }
+  .dv-btn:focus-visible {
+    outline-offset: -5px;
+  }
+  .dv-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .dv-btn-magenta {
+    --edge: var(--magenta);
+  }
+  .dv-btn-magenta:hover {
+    color: #ff5c9d;
+    box-shadow: inset 0 0 10px rgba(255, 0, 110, 0.35);
+  }
+  .dv-btn-ghost {
+    --edge: var(--axis);
+    color: var(--ink-dim);
+  }
+  .dv-btn-ghost:hover {
+    --edge: var(--ink-faint);
+    color: var(--foreground);
+    box-shadow: none;
+  }
+
+  /* ----- filters and inputs ----- */
+  .dv-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dv-chip {
+    min-height: 36px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--ink-dim);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: color 120ms;
+  }
+  .dv-chip:hover {
+    color: var(--foreground);
+  }
+  .dv-chip[aria-pressed="true"] {
+    color: var(--foreground);
+    border-color: var(--magenta);
+    box-shadow: var(--glow-magenta);
+  }
+
+  .dv-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .dv-field label {
+    font-size: 12px;
+    color: var(--ink-dim);
+  }
+
+  .dv-input {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 12px;
+    font-size: 13px;
+    color: var(--foreground);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    outline: 0;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .dv-input::placeholder {
+    color: var(--ink-faint);
+  }
+  .dv-input:focus {
+    border-color: var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+
+  /* ----- chart panel ----- */
+  .dv-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    gap: 16px;
+  }
+
+  .dv-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .dv-panel[data-selected="true"] {
+    border-color: var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+  .dv-panel-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px 16px;
+  }
+  .dv-plot {
+    position: relative;
+    min-height: 240px;
+  }
+
+  /* ----- KPI: the template's high-score counter ----- */
+  .dv-kpi {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .dv-kpi-label {
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+  .dv-kpi-value {
+    font-family: var(--font-pixel);
+    font-size: 24px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+    color: var(--foreground);
+  }
+  .dv-kpi-value-lead {
+    color: var(--yellow);
+  }
+  .dv-kpi-delta {
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+
+  /* ----- status: pair with an icon and a label ----- */
+  .dv-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--foreground);
+  }
+  .dv-status::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: var(--status, var(--ink-faint));
+  }
+  .dv-status-good {
+    --status: var(--good);
+  }
+  .dv-status-warning {
+    --status: var(--warning);
+  }
+  .dv-status-serious {
+    --status: var(--serious);
+  }
+  .dv-status-critical {
+    --status: var(--critical);
+  }
+
+  /* ----- chart parts: text stays in ink, the swatch carries the identity ----- */
+  .dv-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 12px;
+    color: var(--ink-dim);
+  }
+  .dv-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dv-swatch {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    background: currentColor;
+  }
+
+  .dv-swatch-line {
+    flex: none;
+    width: 14px;
+    height: 2px;
+    background: currentColor;
+  }
+
+  .dv-marker {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--surface);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .dv-tooltip {
+    z-index: 40;
+    min-width: 140px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: var(--foreground);
+    background: var(--surface-raised);
+    border: 1px solid var(--cyan);
+    pointer-events: none;
+  }
+
+  /* SVG helpers for hand-built charts */
+  .dv-grid-line {
+    stroke: var(--gridline);
+    stroke-width: 1;
+  }
+  .dv-axis-line {
+    stroke: var(--axis);
+    stroke-width: 1;
+  }
+  .dv-axis-label {
+    fill: var(--ink-faint);
+    font-size: 11px;
+  }
+
+  /* ----- table: the data view behind every chart ----- */
+  .dv-table-wrap {
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .dv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .dv-table th,
+  .dv-table td {
+    padding: 10px 14px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--line-subtle);
+  }
+  .dv-table thead th {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-dim);
+    border-bottom-color: var(--line);
+  }
+  .dv-table tbody th {
+    font-weight: 400;
+  }
+  .dv-table tbody tr:hover {
+    background: var(--surface-raised);
+  }
+  .dv-table tbody tr[aria-selected="true"] {
+    background: rgba(255, 0, 110, 0.08);
+    box-shadow: inset 3px 0 0 var(--magenta);
+  }
+  .dv-table .dv-num {
+    text-align: right;
+  }
+
+  /* ----- modal ----- */
+  .dv-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .dv-modal {
+    width: min(480px, 100%);
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--cyan);
+  }
+
+  /* ----- states ----- */
+  .dv-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 240px;
+    padding: 24px;
+    text-align: center;
+    color: var(--ink-dim);
+  }
+
+  .dv-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: var(--cyan);
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    animation: dv-spin 0.6s steps(8) infinite;
+  }
+
+  /* The one animated flourish: the template's receding floor, for a landing
+     hero only. Place it inside a `position: relative` block with no data. */
+  .dv-horizon {
+    position: absolute;
+    inset: auto -10% 0;
+    height: 60%;
+    pointer-events: none;
+    background:
+      linear-gradient(to right, rgba(0, 245, 255, 0.22) 1px, transparent 1px) 0 0 / 60px 60px,
+      linear-gradient(to bottom, rgba(0, 245, 255, 0.22) 1px, transparent 1px) 0 0 / 60px 60px;
+    transform: perspective(600px) rotateX(60deg);
+    transform-origin: center bottom;
+    mask-image: linear-gradient(to top, transparent 0%, black 35%, transparent 90%);
+    animation: dv-gridscroll 8s linear infinite;
+  }
+}
+
+@keyframes dv-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dv-gridscroll {
+  to {
+    background-position: 0 60px, 0 60px;
+  }
 }
