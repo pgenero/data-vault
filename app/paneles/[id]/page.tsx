@@ -60,6 +60,9 @@ export default async function PanelPage({ params }: PageProps<"/paneles/[id]">) 
         </div>
 
         <div className="flex flex-wrap gap-3">
+          <Link href={`/paneles/${panel.id}/ver`} className="dv-btn">
+            Abrir panel
+          </Link>
           <Link href="/" className="dv-btn dv-btn-ghost">
             Volver a la biblioteca
           </Link>
