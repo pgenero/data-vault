@@ -481,6 +481,29 @@
     color: var(--ink-dim);
   }
 
+  /* A row of KPIs that also fits a narrow column, unlike .dv-dashboard. */
+  .dv-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 16px;
+  }
+
+  /* ----- tags: facts about a panel, not controls ----- */
+  .dv-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .dv-tag {
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--ink-dim);
+    border: 1px solid var(--line);
+  }
+
   /* ----- status: pair with an icon and a label ----- */
   .dv-status {
     display: inline-flex;
