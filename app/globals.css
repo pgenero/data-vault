@@ -303,6 +303,81 @@
     }
   }
 
+  /* Below 840px the links and the account move into the side menu. The doubled
+     class beats .dv-btn, which is declared later and sets display. */
+  .dv-btn.dv-nav-menu-button {
+    display: none;
+    margin-left: auto;
+  }
+  @media (max-width: 839.98px) {
+    .dv-nav-links,
+    .dv-nav-account {
+      display: none;
+    }
+    .dv-btn.dv-nav-menu-button {
+      display: inline-flex;
+    }
+  }
+
+  .dv-mobile-menu {
+    width: min(300px, 85vw);
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0 0 0 auto;
+    padding: 0;
+    color: var(--foreground);
+    background: var(--surface);
+    border: 0;
+    border-left: 1px solid var(--cyan);
+  }
+  .dv-mobile-menu[open] {
+    animation: dv-menu-in 160ms ease-out;
+  }
+  .dv-mobile-menu::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  html:has(.dv-mobile-menu[open]) {
+    overflow: hidden;
+  }
+  .dv-mobile-menu-body {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 100%;
+    padding: 12px 16px 24px;
+  }
+  .dv-mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .dv-mobile-menu-links a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--ink-dim);
+  }
+  .dv-mobile-menu-links a:hover {
+    color: var(--foreground);
+  }
+  .dv-mobile-menu-links a[aria-current="page"] {
+    color: var(--cyan);
+    box-shadow: inset 2px 0 0 var(--cyan);
+  }
+  .dv-mobile-menu-account {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+
   /* ----- footer ----- */
   .dv-footer {
     padding: 20px 16px;
@@ -915,6 +990,12 @@
     transform-origin: center bottom;
     mask-image: linear-gradient(to top, transparent 0%, black 35%, transparent 90%);
     animation: dv-gridscroll 8s linear infinite;
+  }
+}
+
+@keyframes dv-menu-in {
+  from {
+    transform: translateX(100%);
   }
 }
 
