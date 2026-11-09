@@ -79,7 +79,7 @@
   --serious: #ff8a3d;
   --critical: #ff4d6d;
 
-  /* the only glows in the theme: see .dv-btn, .dv-chip and .dv-panel */
+  /* the only glows in the theme: see .dv-btn, .dv-chip, .dv-panel and .dv-card */
   --glow-cyan: 0 0 14px rgba(0, 245, 255, 0.45);
   --glow-magenta: 0 0 14px rgba(255, 0, 110, 0.45);
 
@@ -486,6 +486,60 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
     gap: 16px;
+  }
+
+  /* ----- library ----- */
+  .dv-library-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 24px;
+  }
+  .dv-library-search {
+    flex: 1 1 280px;
+    max-width: 420px;
+  }
+  .dv-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 256px), 1fr));
+    gap: 16px;
+  }
+
+  /* The whole card is one link, so its action is text, never a nested button. */
+  .dv-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .dv-card:hover {
+    border-color: var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+  .dv-card-thumb {
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-subtle);
+  }
+  .dv-card-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px 12px;
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+  .dv-card-action {
+    font-weight: 600;
+    color: var(--cyan);
+  }
+  .dv-card:hover .dv-card-action {
+    text-decoration: underline;
   }
 
   /* ----- panel detail: content, then a side column from 1024px up ----- */
