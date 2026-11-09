@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut, useSession } from "../_lib/session";
 
 export function SiteNav() {
   const pathname = usePathname();
+  const user = useSession();
   const inLibrary = pathname === "/" || pathname.startsWith("/paneles/");
 
   return (
@@ -21,6 +23,20 @@ export function SiteNav() {
           Ranking
         </Link>
       </nav>
+      <div className="dv-nav-account">
+        {user ? (
+          <>
+            <span className="dv-nav-user">{user.name}</span>
+            <button type="button" className="dv-btn dv-btn-ghost" onClick={signOut}>
+              Salir
+            </button>
+          </>
+        ) : (
+          <Link href="/acceso" className="dv-btn">
+            Iniciar sesión
+          </Link>
+        )}
+      </div>
     </header>
   );
 }
