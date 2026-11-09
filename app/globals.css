@@ -488,6 +488,18 @@
     gap: 16px;
   }
 
+  /* ----- panel detail: content, then a side column from 1024px up ----- */
+  .dv-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  @media (min-width: 1024px) {
+    .dv-detail {
+      grid-template-columns: minmax(0, 1fr) 300px;
+    }
+  }
+
   /* ----- tags: facts about a panel, not controls ----- */
   .dv-tags {
     display: flex;
