@@ -17,6 +17,9 @@ export function SiteNav() {
         <Link href="/" aria-current={inLibrary ? "page" : undefined}>
           Biblioteca
         </Link>
+        <Link href="/ranking" aria-current={pathname === "/ranking" ? "page" : undefined}>
+          Ranking
+        </Link>
       </nav>
     </header>
   );

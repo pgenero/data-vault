@@ -542,6 +542,54 @@
     text-decoration: underline;
   }
 
+  /* ----- ranking podium: reading order stays 1-2-3, wide screens show 2-1-3 ----- */
+  .dv-podium {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .dv-podium-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .dv-podium-rank {
+    margin-bottom: 8px;
+    font-family: var(--font-pixel);
+    font-size: 32px;
+    line-height: 1;
+    color: var(--ink-faint);
+  }
+  .dv-podium-slot:first-child .dv-podium-rank {
+    color: var(--foreground);
+  }
+  @media (min-width: 640px) {
+    .dv-podium {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: end;
+    }
+    .dv-podium-slot {
+      min-height: 216px;
+    }
+    .dv-podium-slot:first-child {
+      order: 2;
+      min-height: 264px;
+    }
+    .dv-podium-slot:nth-child(2) {
+      order: 1;
+      min-height: 240px;
+    }
+    .dv-podium-slot:nth-child(3) {
+      order: 3;
+    }
+  }
+
   /* ----- panel detail: content, then a side column from 1024px up ----- */
   .dv-detail {
     display: grid;
