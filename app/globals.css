@@ -291,6 +291,16 @@
     }
   }
 
+  /* ----- footer ----- */
+  .dv-footer {
+    padding: 20px 16px;
+    font-family: var(--font-note);
+    font-size: 14px;
+    text-align: center;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--line);
+  }
+
   /* ----- buttons -----
      clip-path also cuts anything outside the box, so the focus ring is drawn
      inside and the hover glow is inset. It cuts the border at the notches too,
