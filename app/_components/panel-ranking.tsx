@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { CATEGORIES, getRanking, type PanelCategory } from "../_data/panels";
+import { CATEGORIES, getRanking, getYourTopPanel, type PanelCategory } from "../_data/panels";
 import { formatNumber } from "../_data/sample-traffic";
+import { useSession } from "../_lib/session";
 
 export function PanelRanking() {
+  const user = useSession();
   const [category, setCategory] = useState<PanelCategory | null>(null);
   const ranking = getRanking(category ?? undefined);
+  const yourTop = getYourTopPanel(category ?? undefined);
 
   return (
     <>
@@ -79,6 +82,25 @@ export function PanelRanking() {
               </tr>
             ))}
           </tbody>
+          {user && (
+            <tfoot className="dv-table-you">
+              <tr>
+                <th scope="colgroup" colSpan={6}>
+                  Tu panel más consultado, con tus consultas
+                </th>
+              </tr>
+              <tr>
+                <td className="dv-num">
+                  {ranking.findIndex((panel) => panel.id === yourTop.panel.id) + 1}
+                </td>
+                <th scope="row">{yourTop.panel.title}</th>
+                <td>{yourTop.panel.category}</td>
+                <td className="dv-num">{formatNumber(yourTop.views)}</td>
+                <td className="dv-num">{formatNumber(yourTop.panel.viewers)}</td>
+                <td className="dv-num">{yourTop.panel.updatedAt}</td>
+              </tr>
+            </tfoot>
+          )}
         </table>
       </div>
     </>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ViewerUser } from "../../../_components/viewer-user";
 import { getPanel, PANELS } from "../../../_data/panels";
 
 export function generateStaticParams() {
@@ -32,7 +33,7 @@ export default async function PanelViewerPage({ params }: PageProps<"/paneles/[i
           </div>
           <div className="dv-viewer-fact">
             <span className="dv-kpi-label">Usuario</span>
-            <span>Invitado</span>
+            <ViewerUser />
           </div>
         </div>
         <Link href={`/paneles/${panel.id}`} className="dv-btn dv-btn-ghost">

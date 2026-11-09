@@ -848,6 +848,18 @@
   .dv-table .dv-num {
     text-align: right;
   }
+  .dv-table-you {
+    background: rgba(255, 0, 110, 0.08);
+    box-shadow: inset 3px 0 0 var(--magenta);
+    border-top: 1px solid var(--magenta);
+  }
+  .dv-table-you th {
+    font-weight: 600;
+  }
+  .dv-table-you td,
+  .dv-table-you th {
+    border-bottom: 0;
+  }
 
   /* ----- modal ----- */
   .dv-modal-backdrop {
