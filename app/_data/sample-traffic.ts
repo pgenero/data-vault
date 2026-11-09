@@ -1,4 +1,4 @@
-// Made-up data for the home page sample panel. Replace it when real data exists.
+// Made-up data for the chart preview on the panel detail page. Replace it when real data exists.
 
 export const months = [
   { short: "Ene", long: "Enero" },
@@ -38,27 +38,3 @@ export const channels = [
 const numberFormat = new Intl.NumberFormat("es-ES", { useGrouping: "always" });
 
 export const formatNumber = (value: number) => numberFormat.format(value);
-
-const sum = (values: number[]) => values.reduce((total, value) => total + value, 0);
-
-export const monthTotal = (month: number) =>
-  sum(channels.map((channel) => channel.values[month]));
-
-export function getSummary() {
-  const monthTotals = months.map((_, month) => monthTotal(month));
-  const channelTotals = channels.map((channel) => sum(channel.values));
-  const total = sum(monthTotals);
-  const peak = Math.max(...monthTotals);
-  const topTotal = Math.max(...channelTotals);
-  const first = monthTotals[0];
-  const last = monthTotals[monthTotals.length - 1];
-
-  return {
-    total,
-    growth: Math.round(((last - first) / first) * 100),
-    peakMonth: months[monthTotals.indexOf(peak)].long,
-    peak,
-    topChannel: channels[channelTotals.indexOf(topTotal)].name,
-    topShare: Math.round((topTotal / total) * 100),
-  };
-}

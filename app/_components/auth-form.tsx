@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { signIn, signOut } from "../_lib/session";
 
 type Mode = "signin" | "signup";
@@ -14,18 +14,27 @@ const MODES: { id: Mode; label: string }[] = [
 export function AuthForm() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("signin");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Next.js keeps this route alive (hidden) after navigating away, inputs
+  // included, so the password would still be there on the way back.
+  function leave() {
+    formRef.current?.reset();
+    setMode("signin");
+    router.push("/");
+  }
 
   // Uncontrolled inputs: only the user name is ever read, so the password and
   // the email never reach state or storage.
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     signIn(String(new FormData(event.currentTarget).get("usuario") ?? ""));
-    router.push("/");
+    leave();
   }
 
   function continueAsGuest() {
     signOut();
-    router.push("/");
+    leave();
   }
 
   return (
@@ -45,7 +54,7 @@ export function AuthForm() {
       </div>
 
       {/* noValidate: any input is accepted, even a malformed email. */}
-      <form className="flex flex-col gap-4" noValidate onSubmit={handleSubmit}>
+      <form ref={formRef} className="flex flex-col gap-4" noValidate onSubmit={handleSubmit}>
         <div className="dv-field">
           <label htmlFor="acceso-usuario">Usuario</label>
           <input
