@@ -1,6 +1,6 @@
 # SPEC 01 — MVP visual de Data Vault
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** Ninguna
 > **Fecha:** 2026-11-09
 > **Objetivo:** Adaptar las cinco pantallas de `references/templates/` a un catálogo navegable de paneles de datos con contenido inventado, sin reportes ni modelos reales.
