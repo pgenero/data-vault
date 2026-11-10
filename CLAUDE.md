@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Data Vault is a platform for viewing data charts online. The only page so far is the home page in `app/page.tsx`, whose sample panel uses made-up data from `app/_data/sample-traffic.ts`. There are no real panels or data sources yet.
+Data Vault is a platform for viewing data charts online. It is a visual MVP with five screens: the panel library (`/`), panel detail (`/paneles/[id]`), a viewer with a placeholder instead of a report (`/paneles/[id]/ver`), a ranking (`/ranking`) and a simulated sign-in (`/acceso`).
+
+All content is made up. The catalog is in `app/_data/panels.ts`, the chart preview uses `app/_data/sample-traffic.ts`, and the session in `app/_lib/session.ts` only stores a name in `localStorage`. There are no real reports, data sources or authentication yet.
 
 Development follows Spec Driven Design using the `/spec` and `/spec-impl` skills from [Klerith/fernando-skills](https://github.com/Klerith/fernando-skills). The skills are not checked in. Install them with:
 

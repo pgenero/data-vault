@@ -79,7 +79,7 @@
   --serious: #ff8a3d;
   --critical: #ff4d6d;
 
-  /* the only glows in the theme: see .dv-btn, .dv-chip and .dv-panel */
+  /* the only glows in the theme: see .dv-btn, .dv-chip, .dv-panel and .dv-card */
   --glow-cyan: 0 0 14px rgba(0, 245, 255, 0.45);
   --glow-magenta: 0 0 14px rgba(255, 0, 110, 0.45);
 
@@ -284,11 +284,108 @@
     color: var(--cyan);
     box-shadow: inset 0 -2px 0 var(--cyan);
   }
+  .dv-nav-account {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+  .dv-nav-user {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--foreground);
+  }
   @media (max-width: 840px) {
     .dv-nav {
       gap: 12px;
       padding: 12px 16px;
     }
+  }
+
+  /* Below 840px the links and the account move into the side menu. The doubled
+     class beats .dv-btn, which is declared later and sets display. */
+  .dv-btn.dv-nav-menu-button {
+    display: none;
+    margin-left: auto;
+  }
+  @media (max-width: 839.98px) {
+    .dv-nav-links,
+    .dv-nav-account {
+      display: none;
+    }
+    .dv-btn.dv-nav-menu-button {
+      display: inline-flex;
+    }
+  }
+
+  .dv-mobile-menu {
+    width: min(300px, 85vw);
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0 0 0 auto;
+    padding: 0;
+    color: var(--foreground);
+    background: var(--surface);
+    border: 0;
+    border-left: 1px solid var(--cyan);
+  }
+  .dv-mobile-menu[open] {
+    animation: dv-menu-in 160ms ease-out;
+  }
+  .dv-mobile-menu::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  html:has(.dv-mobile-menu[open]) {
+    overflow: hidden;
+  }
+  .dv-mobile-menu-body {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 100%;
+    padding: 12px 16px 24px;
+  }
+  .dv-mobile-menu-links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .dv-mobile-menu-links a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--ink-dim);
+  }
+  .dv-mobile-menu-links a:hover {
+    color: var(--foreground);
+  }
+  .dv-mobile-menu-links a[aria-current="page"] {
+    color: var(--cyan);
+    box-shadow: inset 2px 0 0 var(--cyan);
+  }
+  .dv-mobile-menu-account {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  /* ----- footer ----- */
+  .dv-footer {
+    padding: 20px 16px;
+    font-family: var(--font-note);
+    font-size: 14px;
+    text-align: center;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--line);
   }
 
   /* ----- buttons -----
@@ -471,6 +568,231 @@
     color: var(--ink-dim);
   }
 
+  /* A row of KPIs that also fits a narrow column, unlike .dv-dashboard. */
+  .dv-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 16px;
+  }
+
+  /* ----- library ----- */
+  .dv-library-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 24px;
+  }
+  .dv-library-search {
+    flex: 1 1 280px;
+    max-width: 420px;
+  }
+  .dv-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 256px), 1fr));
+    gap: 16px;
+  }
+
+  /* The whole card is one link, so its action is text, never a nested button. */
+  .dv-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .dv-card:hover {
+    border-color: var(--cyan);
+    box-shadow: var(--glow-cyan);
+  }
+  .dv-card-thumb {
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line-subtle);
+  }
+  .dv-card-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px 12px;
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+  .dv-card-action {
+    font-weight: 600;
+    color: var(--cyan);
+  }
+  .dv-card:hover .dv-card-action {
+    text-decoration: underline;
+  }
+
+  /* ----- access form ----- */
+  .dv-auth-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--line);
+  }
+  .dv-auth-tab {
+    min-height: 40px;
+    padding: 8px;
+    font-size: 13px;
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition: color 120ms;
+  }
+  .dv-auth-tab:hover {
+    color: var(--foreground);
+  }
+  .dv-auth-tab[aria-pressed="true"] {
+    font-weight: 600;
+    color: var(--foreground);
+    box-shadow: inset 0 -2px 0 var(--magenta);
+  }
+
+  /* ----- ranking podium: reading order stays 1-2-3, wide screens show 2-1-3 ----- */
+  .dv-podium {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .dv-podium-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .dv-podium-rank {
+    margin-bottom: 8px;
+    font-family: var(--font-pixel);
+    font-size: 32px;
+    line-height: 1;
+    color: var(--ink-faint);
+  }
+  .dv-podium-slot:first-child .dv-podium-rank {
+    color: var(--foreground);
+  }
+  @media (min-width: 640px) {
+    .dv-podium {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: end;
+    }
+    .dv-podium-slot {
+      min-height: 216px;
+    }
+    .dv-podium-slot:first-child {
+      order: 2;
+      min-height: 264px;
+    }
+    .dv-podium-slot:nth-child(2) {
+      order: 1;
+      min-height: 240px;
+    }
+    .dv-podium-slot:nth-child(3) {
+      order: 3;
+    }
+  }
+
+  /* ----- panel detail: content, then a side column from 1024px up ----- */
+  .dv-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  @media (min-width: 1024px) {
+    .dv-detail {
+      grid-template-columns: minmax(0, 1fr) 300px;
+    }
+  }
+
+  /* ----- panel viewer ----- */
+  .dv-viewer-bar,
+  .dv-viewer-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 24px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .dv-viewer-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    min-width: 0;
+  }
+  .dv-viewer-fact {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  /* Empty on purpose: corner marks show where a report will sit, and nothing
+     here may read as a chart. The two masks intersect only at the corners. */
+  .dv-viewer-frame {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: clamp(320px, 60svh, 640px);
+    padding: 48px 24px;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .dv-viewer-frame::before {
+    content: "";
+    position: absolute;
+    inset: 16px;
+    pointer-events: none;
+    border: 1px solid var(--ink-faint);
+    mask-image:
+      linear-gradient(to right, #000 24px, transparent 24px calc(100% - 24px), #000 calc(100% - 24px)),
+      linear-gradient(to bottom, #000 24px, transparent 24px calc(100% - 24px), #000 calc(100% - 24px));
+    mask-composite: intersect;
+  }
+  .dv-viewer-message {
+    margin: 0;
+    font-family: var(--font-pixel);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--foreground);
+  }
+  @media (min-width: 768px) {
+    .dv-viewer-message {
+      font-size: 24px;
+    }
+  }
+
+  /* ----- tags: facts about a panel, not controls ----- */
+  .dv-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .dv-tag {
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--ink-dim);
+    border: 1px solid var(--line);
+  }
+
   /* ----- status: pair with an icon and a label ----- */
   .dv-status {
     display: inline-flex;
@@ -601,6 +923,18 @@
   .dv-table .dv-num {
     text-align: right;
   }
+  .dv-table-you {
+    background: rgba(255, 0, 110, 0.08);
+    box-shadow: inset 3px 0 0 var(--magenta);
+    border-top: 1px solid var(--magenta);
+  }
+  .dv-table-you th {
+    font-weight: 600;
+  }
+  .dv-table-you td,
+  .dv-table-you th {
+    border-bottom: 0;
+  }
 
   /* ----- modal ----- */
   .dv-modal-backdrop {
@@ -656,6 +990,12 @@
     transform-origin: center bottom;
     mask-image: linear-gradient(to top, transparent 0%, black 35%, transparent 90%);
     animation: dv-gridscroll 8s linear infinite;
+  }
+}
+
+@keyframes dv-menu-in {
+  from {
+    transform: translateX(100%);
   }
 }
 

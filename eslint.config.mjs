@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Design reference only: browser scripts that use React as a global.
+    "references/**",
   ]),
 ]);
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Courier_Prime, JetBrains_Mono, Press_Start_2P } from "next/font/google";
+import { SiteNav } from "./_components/site-nav";
 import "./globals.css";
 
 const pressStart = Press_Start_2P({
@@ -30,7 +31,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="es"
       className={`${pressStart.variable} ${jetBrainsMono.variable} ${courierPrime.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SiteNav />
+        <main className="flex-1">{children}</main>
+        <footer className="dv-footer">© 2026 Data Vault · Datos de ejemplo</footer>
+      </body>
     </html>
   );
 }
